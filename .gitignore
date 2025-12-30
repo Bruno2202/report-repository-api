@@ -1,0 +1,58 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Arquivos de build
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Logs
+*.log
+
+# Cache geral
+.DS_Store
+*.cache
+.cache/
+pip-wheel-metadata/
+
+# Ferramentas de lint/format
+.mypy_cache/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Banco de dados local
+*.sqlite3
+*.db
+
+# Configurações sensíveis
+.env
+.env.*
+*.env
+*.secret
+secrets.json
+
+# Config do editor
+.vscode/
+.idea/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Arquivos temporários
+*.tmp
+*.temp
+
+# Arquivos de SO
+Thumbs.db
+desktop.ini
+
+metadata.py
