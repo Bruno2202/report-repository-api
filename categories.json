@@ -1,0 +1,41 @@
+{
+    "categories": [
+        {
+            "id": 1,
+            "name": "Produtos"
+        },
+        {
+            "id": 2,
+            "name": "Cliente"
+        },
+        {
+            "id": 3,
+            "name": "Convênio"
+        },
+        {
+            "id": 4,
+            "name": "Compra"
+        },
+        {
+            "id": 5,
+            "name": "Venda"
+        },
+        {
+            "id": 6,
+            "name": "Loja"
+        },
+        {
+            "id": 7,
+            "name": "Vendedor"
+        },
+        {
+            "id": 8,
+            "name": "Promoção"
+        },
+        {
+            "id": 9,
+            "name": "Fornecedor"
+        }
+    ],
+    "last_id": 9
+}

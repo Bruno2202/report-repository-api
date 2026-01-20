@@ -1,0 +1,425 @@
+{
+    "tags": [
+        {
+            "id": 1,
+            "name": "Cod. Prod",
+            "category": 1
+        },
+        {
+            "id": 2,
+            "name": "Barras",
+            "category": 1
+        },
+        {
+            "id": 3,
+            "name": "Nome do Produto",
+            "category": 1
+        },
+        {
+            "id": 4,
+            "name": "Preço de Venda",
+            "category": 1
+        },
+        {
+            "id": 5,
+            "name": "Qtde. Estoque",
+            "category": 1
+        },
+        {
+            "id": 6,
+            "name": "Classe",
+            "category": 1
+        },
+        {
+            "id": 7,
+            "name": "Seção",
+            "category": 1
+        },
+        {
+            "id": 8,
+            "name": "Fabricante",
+            "category": 1
+        },
+        {
+            "id": 9,
+            "name": "Ult. Custo",
+            "category": 1
+        },
+        {
+            "id": 10,
+            "name": "Custo Médio",
+            "category": 1
+        },
+        {
+            "id": 11,
+            "name": "NCM",
+            "category": 1
+        },
+        {
+            "id": 12,
+            "name": "CEST",
+            "category": 1
+        },
+        {
+            "id": 13,
+            "name": "CST",
+            "category": 1
+        },
+        {
+            "id": 14,
+            "name": "Aliq. ICMS",
+            "category": 1
+        },
+        {
+            "id": 15,
+            "name": "Margem de Lucro",
+            "category": 1
+        },
+        {
+            "id": 16,
+            "name": "Ult. Compra",
+            "category": 1
+        },
+        {
+            "id": 17,
+            "name": "Custo",
+            "category": 1
+        },
+        {
+            "id": 18,
+            "name": "Unidade",
+            "category": 1
+        },
+        {
+            "id": 19,
+            "name": "Giro",
+            "category": 1
+        },
+        {
+            "id": 20,
+            "name": "Curva",
+            "category": 1
+        },
+        {
+            "id": 21,
+            "name": "Produto Permite Desconto",
+            "category": 1
+        },
+        {
+            "id": 22,
+            "name": "Produto Permite Pedido Eletrônico",
+            "category": 1
+        },
+        {
+            "id": 23,
+            "name": "PBM Produto",
+            "category": 1
+        },
+        {
+            "id": 24,
+            "name": "Situação Produto",
+            "category": 1
+        },
+        {
+            "id": 25,
+            "name": "Nome Cliente",
+            "category": 2
+        },
+        {
+            "id": 26,
+            "name": "Cod. Cliente",
+            "category": 2
+        },
+        {
+            "id": 27,
+            "name": "CPF/CNPJ",
+            "category": 2
+        },
+        {
+            "id": 28,
+            "name": "RG",
+            "category": 2
+        },
+        {
+            "id": 29,
+            "name": "Data Nascimento",
+            "category": 2
+        },
+        {
+            "id": 30,
+            "name": "Situação Cliente",
+            "category": 2
+        },
+        {
+            "id": 31,
+            "name": "Categoria Cliente",
+            "category": 2
+        },
+        {
+            "id": 32,
+            "name": "Tipo Cliente",
+            "category": 2
+        },
+        {
+            "id": 33,
+            "name": "Restrição Cliente",
+            "category": 2
+        },
+        {
+            "id": 34,
+            "name": "Observação Cliente",
+            "category": 2
+        },
+        {
+            "id": 35,
+            "name": "Endereço Cliente",
+            "category": 2
+        },
+        {
+            "id": 36,
+            "name": "Telefone Cliente",
+            "category": 2
+        },
+        {
+            "id": 37,
+            "name": "Cod. Empresa",
+            "category": 3
+        },
+        {
+            "id": 38,
+            "name": "Data Fechamento",
+            "category": 3
+        },
+        {
+            "id": 39,
+            "name": "Data Vencimento",
+            "category": 3
+        },
+        {
+            "id": 40,
+            "name": "CNPJ Empresa",
+            "category": 3
+        },
+        {
+            "id": 41,
+            "name": "Razão Social Empresa",
+            "category": 3
+        },
+        {
+            "id": 42,
+            "name": "Nome Fantasia Empresa",
+            "category": 3
+        },
+        {
+            "id": 43,
+            "name": "Situação Empresa",
+            "category": 3
+        },
+        {
+            "id": 44,
+            "name": "Valor Fechamento",
+            "category": 3
+        },
+        {
+            "id": 45,
+            "name": "Num. Nota",
+            "category": 4
+        },
+        {
+            "id": 46,
+            "name": "Data Compra",
+            "category": 4
+        },
+        {
+            "id": 47,
+            "name": "Qtde. Comprada",
+            "category": 4
+        },
+        {
+            "id": 48,
+            "name": "Valor Total da Nota",
+            "category": 4
+        },
+        {
+            "id": 49,
+            "name": "Valor Unitário",
+            "category": 4
+        },
+        {
+            "id": 50,
+            "name": "Valor Bruto",
+            "category": 4
+        },
+        {
+            "id": 51,
+            "name": "Cupom",
+            "category": 5
+        },
+        {
+            "id": 52,
+            "name": "Data Venda",
+            "category": 5
+        },
+        {
+            "id": 53,
+            "name": "Hora Venda",
+            "category": 5
+        },
+        {
+            "id": 54,
+            "name": "Tipo Venda",
+            "category": 5
+        },
+        {
+            "id": 55,
+            "name": "Qtde. Vendida",
+            "category": 5
+        },
+        {
+            "id": 56,
+            "name": "Valor Bruto",
+            "category": 5
+        },
+        {
+            "id": 57,
+            "name": "Valor Desconto",
+            "category": 5
+        },
+        {
+            "id": 58,
+            "name": "Valor Venda",
+            "category": 5
+        },
+        {
+            "id": 59,
+            "name": "CMV",
+            "category": 5
+        },
+        {
+            "id": 60,
+            "name": "% Desconto",
+            "category": 5
+        },
+        {
+            "id": 61,
+            "name": "Valor ICMS",
+            "category": 5
+        },
+        {
+            "id": 62,
+            "name": "Valor Comissão",
+            "category": 5
+        },
+        {
+            "id": 63,
+            "name": "% Comissão",
+            "category": 5
+        },
+        {
+            "id": 64,
+            "name": "Cod. Caixa",
+            "category": 5
+        },
+        {
+            "id": 65,
+            "name": "% CMV",
+            "category": 5
+        },
+        {
+            "id": 66,
+            "name": "% MC",
+            "category": 5
+        },
+        {
+            "id": 67,
+            "name": "Valor Frete",
+            "category": 5
+        },
+        {
+            "id": 68,
+            "name": "Forma de Pagamento",
+            "category": 5
+        },
+        {
+            "id": 69,
+            "name": "Origem da Venda",
+            "category": 5
+        },
+        {
+            "id": 70,
+            "name": "Num. Loja",
+            "category": 6
+        },
+        {
+            "id": 71,
+            "name": "Cod. Loja",
+            "category": 6
+        },
+        {
+            "id": 72,
+            "name": "Nome Loja",
+            "category": 6
+        },
+        {
+            "id": 73,
+            "name": "CNPJ Loja",
+            "category": 6
+        },
+        {
+            "id": 74,
+            "name": "Cod. Vendedor",
+            "category": 7
+        },
+        {
+            "id": 75,
+            "name": "Nome Vendedor",
+            "category": 7
+        },
+        {
+            "id": 76,
+            "name": "Data Inical Promoção",
+            "category": 8
+        },
+        {
+            "id": 77,
+            "name": "Data Final Promoção",
+            "category": 8
+        },
+        {
+            "id": 78,
+            "name": "Valor Promoção",
+            "category": 8
+        },
+        {
+            "id": 79,
+            "name": "Tabloide",
+            "category": 8
+        },
+        {
+            "id": 80,
+            "name": "PBM Promoção",
+            "category": 8
+        },
+        {
+            "id": 81,
+            "name": "% MKP Promoção",
+            "category": 8
+        },
+        {
+            "id": 82,
+            "name": "Cod. Fornecedor",
+            "category": 9
+        },
+        {
+            "id": 83,
+            "name": "Nome Fornecedor",
+            "category": 9
+        },
+        {
+            "id": 84,
+            "name": "CNPJ Fornecedor",
+            "category": 9
+        }
+    ],
+    "last_id": 84
+}
