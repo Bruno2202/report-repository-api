@@ -1,9 +1,11 @@
 import os
 import json
+import re
 
 from flask import Flask, render_template, jsonify, request, send_file
 from flask_cors import CORS
 from dotenv import load_dotenv
+import mimetypes
 import shutil
 from werkzeug.utils import secure_filename
 
@@ -100,34 +102,38 @@ def save():
         report_json_str = request.form.get('report')
 
         if not old_folder_name or not report_json_str:
-            return jsonify({"success": False, "message": "Dados incompletos (folder ou report missing)."}), 400
+            return jsonify({"success": False, "message": "Dados incompletos."}), 400
 
         report_data = json.loads(report_json_str)
-        new_folder_name = report_data.get('title')
+        raw_title = report_data.get('title')
 
-        old_folder_path = os.path.join(base_path, old_folder_name)
-        new_folder_path = os.path.join(base_path, new_folder_name)
+        new_folder_name = re.sub(r'[\\/*?:"<>|]', '', raw_title).strip()
 
-        if old_folder_name != new_folder_name:
-            if os.path.exists(new_folder_path):
-                return jsonify({
-                    "success": False,
-                    "message": "Já existe uma pasta com esse nome."
-                }), 400
+        old_folder_path = os.path.normpath(os.path.join(base_path, old_folder_name))
+        new_folder_path = os.path.normpath(os.path.join(base_path, new_folder_name))
 
-            os.rename(old_folder_path, new_folder_path)
+        if not os.path.exists(old_folder_path):
+            os.makedirs(new_folder_path, exist_ok=True)
             current_active_path = new_folder_path
         else:
-            current_active_path = old_folder_path
+            if old_folder_name != new_folder_name:
+                if os.path.exists(new_folder_path) and old_folder_name.upper() != new_folder_name.upper():
+                    return jsonify({"success": False, "message": "Já existe uma pasta com o novo nome."}), 400
+
+                os.rename(old_folder_path, new_folder_path)
+                current_active_path = new_folder_path
+            else:
+                current_active_path = old_folder_path
+
+        if not os.path.exists(current_active_path):
+            os.makedirs(current_active_path, exist_ok=True)
 
         metadata_file_path = os.path.join(current_active_path, "metadata.json")
-        DEFAULT_METADATA = {"title": "", "type": "R", "tags": [], "description": "", "folderPath": ""}
-
         if os.path.exists(metadata_file_path):
             with open(metadata_file_path, 'r', encoding='utf-8') as f:
                 current_metadata = json.load(f)
         else:
-            current_metadata = DEFAULT_METADATA.copy()
+            current_metadata = {"title": "", "type": "R", "tags": [], "description": "", "folderPath": ""}
 
         current_metadata.update(report_data)
         current_metadata['folderPath'] = current_active_path
@@ -140,46 +146,58 @@ def save():
                 if file.lower().endswith(extension):
                     try:
                         os.remove(os.path.join(path, file))
-                    except Exception as e:
-                        print(f"Erro ao remover arquivo antigo {file}: {e}")
+                    except:
+                        pass
 
         xml_file = request.files.get('xml')
-
         if xml_file:
             remove_old_files_by_extension(current_active_path, '.xml')
-            xml_file.save(os.path.join(current_active_path, xml_file.filename.title().upper()))
+            # Pega o nome do arquivo original e limpa mantendo maiúsculas, sem secure_filename
+            base_xml_name = os.path.splitext(xml_file.filename)[0]
+            clean_xml_name = re.sub(r'[\\/*?:"<>|]', '', base_xml_name).upper()
+            xml_filename = f"{clean_xml_name}.xml" # Extensão minúscula conforme combinado
+            xml_file.save(os.path.join(current_active_path, xml_filename))
 
         sql_file = request.files.get('sql')
         if sql_file:
             remove_old_files_by_extension(current_active_path, '.sql')
             sql_file.save(os.path.join(current_active_path, "query.sql"))
 
-        return jsonify({
-            "success": True,
-            "newFolder": new_folder_name
-        })
+        return jsonify({"success": True, "newFolder": new_folder_name})
 
     except Exception as e:
-        print(f"Erro no save: {e}")
-        return jsonify({
-            "success": False,
-            "message": f"Erro ao processar alteração: {str(e)}"
-        }), 500
+        import traceback
+        print(traceback.format_exc())
+        return jsonify({"success": False, "message": f"Erro: {str(e)}"}), 500
 
 
 @app.route('/api/download/<folder>/<filename>', methods=['GET'])
 def download(folder, filename):
     base_path = get_base_path()
-    file_path = os.path.join(base_path, folder, filename)
+    file_path = os.path.normpath(os.path.join(base_path, folder, filename))
 
     if not os.path.exists(file_path):
-        return jsonify({
-            "error": True,
-            "message": "Arquivo não encontrado."
-        }), 404
+        return jsonify({"error": True, "message": "Arquivo não encontrado."}), 404
 
     try:
-        return send_file(file_path, as_attachment=True)
+        mime_type, _ = mimetypes.guess_type(file_path)
+        name_without_ext = os.path.splitext(filename)[0]
+
+        if filename.lower().endswith('.xml'):
+            new_filename = f"{name_without_ext}.xml"
+            mime_type = 'application/xml'
+        elif filename.lower().endswith('.sql'):
+            new_filename = f"{name_without_ext}.sql"
+            mime_type = 'text/plain'
+        else:
+            new_filename = filename
+
+        return send_file(
+            file_path,
+            as_attachment=True,
+            mimetype=mime_type,
+            download_name=new_filename
+        )
     except Exception as e:
         return jsonify({"error": True, "message": str(e)}), 500
 
@@ -189,33 +207,29 @@ def create():
     base_path = get_base_path()
 
     try:
-        # 1. Recuperar arquivos e metadados
         xml_file = request.files.get('xml')
         sql_file = request.files.get('sql')
         metadata_raw = request.form.get('metadata')
         incoming_metadata = json.loads(metadata_raw) if metadata_raw else {}
 
-        # 2. Sanitizar o título para ser um nome de pasta seguro
-        # Se não houver título no JSON, usa o nome do XML ou um padrão
-        raw_title = incoming_metadata.get('title') or (xml_file.filename if xml_file else "Relatorio_Sem_Titulo")
-        folder_name = secure_filename(raw_title)
+        raw_title = incoming_metadata.get('title') or (xml_file.filename if xml_file else "RelatorioSemTitulo")
+
+        folder_name = re.sub(r'[\\/*?:"<>|]', '', raw_title).strip()
 
         folder_path = os.path.join(base_path, folder_name)
         os.makedirs(folder_path, exist_ok=True)
 
-        # 3. Salvar o arquivo XML (se existir)
         if xml_file:
-            # Mantém o nome original sanitizado ou define um padrão
-            xml_filename = secure_filename(xml_file.filename).upper()
+            base_name = os.path.splitext(xml_file.filename)[0]
+            clean_xml_name = re.sub(r'[\\/*?:"<>|]', '', base_name).upper()
+            xml_filename = f"{clean_xml_name}.xml"
             xml_file.save(os.path.join(folder_path, xml_filename))
 
-        # 4. Salvar o arquivo SQL (se existir)
         if sql_file:
             sql_file.save(os.path.join(folder_path, "query.sql"))
 
-        # 5. Criar o arquivo de metadados
         metadata_content = {
-            "title": raw_title,  # Mantemos o título original (com espaços/acentos) para exibição
+            "title": raw_title,
             "type": incoming_metadata.get('type', "R"),
             "tags": incoming_metadata.get('tags', []),
             "description": incoming_metadata.get('description', ""),
@@ -226,16 +240,9 @@ def create():
         with open(metadata_file_path, 'w', encoding='utf-8') as f:
             json.dump(metadata_content, f, indent=4, ensure_ascii=False)
 
-        return jsonify({
-            "success": True,
-            "message": "Estrutura criada com sucesso!",
-            "folder": folder_name
-        }), 201
+        return jsonify({"success": True, "folder": folder_name}), 201
 
-    except json.JSONDecodeError:
-        return jsonify({"success": False, "message": "Metadata JSON inválido"}), 400
     except Exception as e:
-        print(f"❌ Erro: {str(e)}")
         return jsonify({"success": False, "message": str(e)}), 500
 
 

@@ -35,7 +35,15 @@
         {
             "id": 9,
             "name": "Fornecedor"
+        },
+        {
+            "id": 10,
+            "name": "Balanço"
+        },
+        {
+            "id": 11,
+            "name": "Clientes VSM"
         }
     ],
-    "last_id": 9
+    "last_id": 11
 }
