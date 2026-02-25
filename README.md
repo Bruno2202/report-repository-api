@@ -77,7 +77,7 @@ Agradecemos o seu interesse em contribuir para este projeto! Siga estas diretriz
 
 ## Licença
 
-A licença deste projeto não foi especificada.
+ste projeto está licenciado sob a Licença MIT. Consulte o arquivo LICENSE para mais detalhes.
 
 ---
 
