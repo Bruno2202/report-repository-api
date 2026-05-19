@@ -434,7 +434,12 @@
             "id": 87,
             "name": "Unimed Amparo - 6373",
             "category": 11
+        },
+        {
+            "id": 88,
+            "name": "Unimed Sorocaba - 4328",
+            "category": 2
         }
     ],
-    "last_id": 87
+    "last_id": 88
 }

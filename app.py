@@ -46,15 +46,17 @@ def listar():
             files = os.listdir(path_abs)
 
             xml_file = next((f for f in files if f.lower().endswith('.xml')), None)
-            sql_file = next((f for f in files if f.lower().endswith('.sql')), None)
-
-            sql_content = ""
-            if sql_file:
+            
+            # Coletar todos os arquivos .sql
+            sql_files = [f for f in files if f.lower().endswith('.sql')]
+            sqls = []
+            for sf in sql_files:
                 try:
-                    with open(os.path.join(path_abs, sql_file), 'r', encoding='utf-8', errors='ignore') as f:
-                        sql_content = f.read()
+                    with open(os.path.join(path_abs, sf), 'r', encoding='utf-8', errors='ignore') as f:
+                        content = f.read()
                 except:
-                    sql_content = "-- Erro ao ler arquivo SQL"
+                    content = "-- Erro ao ler arquivo SQL"
+                sqls.append({"name": sf, "sql": content})
 
             metadata_file = os.path.join(path_abs, "metadata.json")
 
@@ -81,8 +83,7 @@ def listar():
                 "folder": folder,
                 "xml": xml_file or "",
                 "hasXml": xml_file is not None,
-                "sql": sql_content,
-                "sqlFile": sql_file or "",
+                "sqls": sqls,
                 "folderPath": path_abs,
                 "description": description,
                 "tags": tags
@@ -155,13 +156,20 @@ def save():
             # Pega o nome do arquivo original e limpa mantendo maiúsculas, sem secure_filename
             base_xml_name = os.path.splitext(xml_file.filename)[0]
             clean_xml_name = re.sub(r'[\\/*?:"<>|]', '', base_xml_name).upper()
-            xml_filename = f"{clean_xml_name}.xml" # Extensão minúscula conforme combinado
+            xml_filename = f"{clean_xml_name}.xml"
             xml_file.save(os.path.join(current_active_path, xml_filename))
 
-        sql_file = request.files.get('sql')
-        if sql_file:
-            remove_old_files_by_extension(current_active_path, '.sql')
-            sql_file.save(os.path.join(current_active_path, "query.sql"))
+        # Suportar múltiplos arquivos SQL
+        sql_files = request.files.getlist('sql')
+        if sql_files:
+            # Adicionar novos arquivos SQL sem remover os existentes
+            for sql_file in sql_files:
+                if sql_file and sql_file.filename:
+                    # Sanitizar o nome do arquivo
+                    base_sql_name = os.path.splitext(sql_file.filename)[0]
+                    clean_sql_name = re.sub(r'[\\/*?:"<>|]', '', base_sql_name)
+                    sql_filename = f"{clean_sql_name}.sql"
+                    sql_file.save(os.path.join(current_active_path, sql_filename))
 
         return jsonify({"success": True, "newFolder": new_folder_name})
 
@@ -208,7 +216,7 @@ def create():
 
     try:
         xml_file = request.files.get('xml')
-        sql_file = request.files.get('sql')
+        sql_files = request.files.getlist('sql')
         metadata_raw = request.form.get('metadata')
         incoming_metadata = json.loads(metadata_raw) if metadata_raw else {}
 
@@ -225,8 +233,13 @@ def create():
             xml_filename = f"{clean_xml_name}.xml"
             xml_file.save(os.path.join(folder_path, xml_filename))
 
-        if sql_file:
-            sql_file.save(os.path.join(folder_path, "query.sql"))
+        # Suportar múltiplos arquivos SQL
+        for sql_file in sql_files:
+            if sql_file and sql_file.filename:
+                base_sql_name = os.path.splitext(sql_file.filename)[0]
+                clean_sql_name = re.sub(r'[\\/*?:"<>|]', '', base_sql_name)
+                sql_filename = f"{clean_sql_name}.sql"
+                sql_file.save(os.path.join(folder_path, sql_filename))
 
         metadata_content = {
             "title": raw_title,
